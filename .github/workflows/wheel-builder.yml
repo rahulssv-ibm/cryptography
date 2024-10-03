@@ -49,6 +49,32 @@ jobs:
           name: "vectors-sdist-wheel"
           path: vectors/dist/cryptography*
 
+  sdist-ppc64le:
+    runs-on: ["self-hosted", "ppc64le", "linux"]
+    name: sdists
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          # The tag to build or the tag received by the tag event
+          ref: ${{ github.event.inputs.version || github.ref }}
+          persist-credentials: false
+
+      - run: python -m venv .venv
+      - name: Install Python dependencies
+        run: .venv/bin/pip install -U pip build
+      - name: Make sdist (cryptography)
+        run: .venv/bin/python -m build --sdist
+      - name: Make sdist and wheel (vectors)
+        run: cd vectors/ && ../.venv/bin/python -m build
+      - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        with:
+          name: "cryptography-sdist"
+          path: dist/cryptography*
+      - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        with:
+          name: "vectors-sdist-wheel"
+          path: vectors/dist/cryptography*
+
   manylinux:
     needs: [sdist]
     runs-on: ${{ matrix.MANYLINUX.RUNNER }}
