@@ -55,32 +55,29 @@ jobs:
   sdist-ppc64le:
     runs-on: ["self-hosted", "ppc64le", "linux"]
     name: sdists ppc64le
-    container:
-      image: ppc64le/python:3.12-slim-bullseye
+    
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           # The tag to build or the tag received by the tag event
           ref: ${{ github.event.inputs.version || github.ref }}
           persist-credentials: false
-
-      - name: Install dependemcies
+       # Build the Docker image
+      - name: Build Docker image
         run: |
-          apt-get update -y
-          apt-get install -y curl build-essential libssl-dev libffi-dev python3-dev pkg-config cmake
-       # Install Rust and Cargo
-      - name: Install Rust and Cargo
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > sh.rustup.rs && \
-          sh ./sh.rustup.rs -y && export PATH=$PATH:$HOME/.cargo/bin && . "$HOME/.cargo/env"
+          docker build -t cryptography-ppc64le -f ppc64le.dockerfile .
 
-      - run: python -m venv .venv
-      - name: Install Python dependencies
-        run: .venv/bin/pip install -U pip build
-      - name: Make sdist (cryptography)
-        run: .venv/bin/python -m build --sdist
-      - name: Make sdist and wheel (vectors)
-        run: cd vectors/ && ../.venv/bin/python -m build
+      # Run Docker container and execute the sdist build
+      - name: Run sdist inside Docker container
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/cryptography \
+            cryptography-ppc64le \
+            bash -c "
+              python -m venv .venv &&
+              .venv/bin/pip install -U pip build maturin &&
+              .venv/bin/python -m build --sdist
+            "
       - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
           name: "cryptography-sdist"
