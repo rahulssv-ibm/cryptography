@@ -68,8 +68,8 @@ jobs:
        # Install Rust and Cargo
       - name: Install Rust and Cargo
         run: |
-          curl https://sh.rustup.rs -sSf | sh -s -- -y
-          source $HOME/.cargo/env
+          sudo curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > sh.rustup.rs && \
+          sh ./sh.rustup.rs -y && export PATH=$PATH:$HOME/.cargo/bin && . "$HOME/.cargo/env"
 
       - run: python -m venv .venv
       - name: Install Python dependencies
