@@ -51,7 +51,9 @@ jobs:
 
   sdist-ppc64le:
     runs-on: ["self-hosted", "ppc64le", "linux"]
-    name: sdists
+    name: sdists ppc64le
+    container:
+      image: ppc64le/python:3.12-slim-bullseye
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
