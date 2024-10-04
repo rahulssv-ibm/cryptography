@@ -78,8 +78,8 @@ jobs:
             -v ${{ github.workspace }}:/cryptography \
             cryptography-ppc64le \
             bash -c "
-              source /home/builduser/.bashrc && \
               git config --global --add safe.directory /cryptography && \
+              source $HOME/.cargo/env && \
               python -m venv .venv &&
               .venv/bin/pip install -U pip build maturin &&
               .venv/bin/python -m build --sdist
