@@ -61,6 +61,12 @@ jobs:
           ref: ${{ github.event.inputs.version || github.ref }}
           persist-credentials: false
 
+       # Install Rust and Cargo
+      - name: Install Rust and Cargo
+        run: |
+          curl https://sh.rustup.rs -sSf | sh -s -- -y
+          source $HOME/.cargo/env
+
       - run: python -m venv .venv
       - name: Install Python dependencies
         run: .venv/bin/pip install -U pip build
