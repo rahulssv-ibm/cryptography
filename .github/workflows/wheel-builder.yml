@@ -61,6 +61,10 @@ jobs:
           ref: ${{ github.event.inputs.version || github.ref }}
           persist-credentials: false
 
+      - name: Install dependemcies
+        run: |
+          apt-get update -y
+          apt-get install -y curl build-essential libssl-dev libffi-dev python3-dev pkg-config cmake
        # Install Rust and Cargo
       - name: Install Rust and Cargo
         run: |
