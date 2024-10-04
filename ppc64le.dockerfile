@@ -28,33 +28,16 @@ RUN apt-get update -y -q && \
 #RUN  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > sh.rustup.rs && \
 #    sh ./sh.rustup.rs -y && export PATH=$PATH:$HOME/.cargo/bin && . "$HOME/.cargo/env"
 #RUN rm -rf sh.rustup.rs
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
-
-
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \
+    source $HOME/.cargo/env \
+    echo 'export PATH=$PATH:$HOME/.cargo/bin' >> ~/.bashrc
 
 # Ensure Cargo is in the PATH for all shell sessions
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-# Create a non-root user and switch to it
-RUN useradd -m builduser
-USER builduser
-WORKDIR /cryptography
-
-# Copy source files and change ownership to builduser
-COPY --chown=builduser:builduser . .
-
-# Set Git safe directory for builduser
-RUN git config --global --add safe.directory /cryptography
-
-# Source Rust environment for builduser
-RUN echo 'source $HOME/.cargo/env' >> /home/builduser/.bashrc
-
-# The default command to run
-CMD ["bash"]
-
 RUN pip install --upgrade pip
 
-# RUN apt-get -y install enchant-2
+RUN apt-get -y install enchant-2
 
 COPY . /cryptography
 WORKDIR /cryptography
