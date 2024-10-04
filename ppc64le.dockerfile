@@ -25,10 +25,13 @@ RUN apt-get update -y -q && \
     curl build-essential libssl-dev libffi-dev python3-dev pkg-config cmake \
     git
 
-RUN  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > sh.rustup.rs && \
-    sh ./sh.rustup.rs -y && export PATH=$PATH:$HOME/.cargo/bin && . "$HOME/.cargo/env"
-RUN rm -rf sh.rustup.rs
-
+#RUN  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > sh.rustup.rs && \
+#    sh ./sh.rustup.rs -y && export PATH=$PATH:$HOME/.cargo/bin && . "$HOME/.cargo/env"
+#RUN rm -rf sh.rustup.rs
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \
+    echo 'source $HOME/.cargo/env' >> /root/.bashrc && \
+    source $HOME/.cargo/env
+    
 RUN pip install --upgrade pip
 
 RUN apt-get -y install enchant-2
