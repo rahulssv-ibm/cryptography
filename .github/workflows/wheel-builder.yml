@@ -9,6 +9,9 @@ on:
   # Do not add any non-tag push events without updating pypi-publish.yml. If
   # you do, it'll upload wheels to PyPI.
   push:
+    branches:
+      - '*.*'
+      - '*.*.*'
     tags:
       - '*.*'
       - '*.*.*'
@@ -68,7 +71,7 @@ jobs:
        # Install Rust and Cargo
       - name: Install Rust and Cargo
         run: |
-          sudo curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > sh.rustup.rs && \
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > sh.rustup.rs && \
           sh ./sh.rustup.rs -y && export PATH=$PATH:$HOME/.cargo/bin && . "$HOME/.cargo/env"
 
       - run: python -m venv .venv
