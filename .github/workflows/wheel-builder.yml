@@ -67,6 +67,10 @@ jobs:
         run: |
           docker build -t cryptography-ppc64le -f ppc64le.dockerfile .
 
+      - name: Check Cargo installation
+        run: |
+         docker run --rm cryptography-ppc64le cargo --version
+         
       # Run Docker container and execute the sdist build
       - name: Run sdist inside Docker container
         run: |
@@ -74,6 +78,7 @@ jobs:
             -v ${{ github.workspace }}:/cryptography \
             cryptography-ppc64le \
             bash -c "
+              source $HOME/.cargo/env &&
               python -m venv .venv &&
               .venv/bin/pip install -U pip build maturin &&
               .venv/bin/python -m build --sdist
