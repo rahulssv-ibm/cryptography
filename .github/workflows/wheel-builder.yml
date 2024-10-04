@@ -65,7 +65,7 @@ jobs:
        # Build the Docker image
       - name: Build Docker image
         run: |
-          docker build -t cryptography-ppc64le -f ppc64le.dockerfile .
+          docker build -t cryptography-ppc64le -f ppc64le.dockerfile .ing 
 
       # Run Docker container and execute the sdist build
       - name: Run sdist inside Docker container
