@@ -53,7 +53,7 @@ jobs:
           path: vectors/dist/cryptography*
 
   sdist-ppc64le:
-    runs-on: ["self-hosted-lxd", "ppc64le", "linux"]
+    runs-on: ["self-hosted", "ppc64le", "linux"]
     name: sdists ppc64le
     
     steps:
