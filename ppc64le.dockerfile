@@ -54,7 +54,7 @@ CMD ["bash"]
 
 RUN pip install --upgrade pip
 
-RUN apt-get -y install enchant-2
+# RUN apt-get -y install enchant-2
 
 COPY . /cryptography
 WORKDIR /cryptography
