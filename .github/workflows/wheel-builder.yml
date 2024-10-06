@@ -22,8 +22,8 @@ on:
       - pyproject.toml
       - vectors/pyproject.toml
 
-env:
-  BUILD_REQUIREMENTS_PATH: .github/requirements/build-requirements.txt
+#env:
+#  BUILD_REQUIREMENTS_PATH: .github/requirements/build-requirements.txt
 
 jobs:
   sdist:
