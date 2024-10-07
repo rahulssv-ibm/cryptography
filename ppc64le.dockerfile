@@ -28,20 +28,16 @@ RUN apt-get update -y -q && \
 #RUN  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > sh.rustup.rs && \
 #    sh ./sh.rustup.rs -y && export PATH=$PATH:$HOME/.cargo/bin && . "$HOME/.cargo/env"
 #RUN rm -rf sh.rustup.rs
-# Install Rust using rustup
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > sh.rustup.rs && \
-    sh ./sh.rustup.rs -y
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \
+    source $HOME/.cargo/env \
+    echo 'export PATH=$PATH:$HOME/.cargo/bin' >> ~/.bashrc
 
-# Add Cargo to PATH
-ENV PATH="/home/builduser/.cargo/bin:${PATH}"
+# Ensure Cargo is in the PATH for all shell sessions
+ENV PATH="/root/.cargo/bin:${PATH}"
 
-# Switch to a non-root user
-RUN useradd -m builduser
-USER builduser
+RUN pip install --upgrade pip
 
-# Create a .bashrc file for builduser
-RUN echo 'source $HOME/.cargo/env' > /home/builduser/.bashrc
-
+RUN apt-get -y install enchant-2
 
 COPY . /cryptography
 WORKDIR /cryptography
