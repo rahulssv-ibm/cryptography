@@ -22,8 +22,8 @@ on:
       - pyproject.toml
       - vectors/pyproject.toml
 
-#env:
-#  BUILD_REQUIREMENTS_PATH: .github/requirements/build-requirements.txt
+env:
+  BUILD_REQUIREMENTS_PATH: .github/requirements/build-requirements.txt
 
 jobs:
   sdist:
@@ -82,7 +82,7 @@ jobs:
             "
       - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
-          name: "cryptography-sdist"
+          name: "cryptography-sdist-ppc64le"
           path: dist/cryptography*
       - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
