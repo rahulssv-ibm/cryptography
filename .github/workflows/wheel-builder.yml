@@ -93,7 +93,7 @@ jobs:
     needs: [sdist, sdist-ppc64le]
     runs-on: ${{ matrix.MANYLINUX.RUNNER }}
     container:
-      image: ghcr.io/pyca/${{ matrix.MANYLINUX.CONTAINER }}
+      image: ppc64le/python:3.12-slim-bullseye
       volumes:
         - /staticnodehost:/staticnodecontainer:rw,rshared
         - /staticnodehost:/__e/node20:ro,rshared
@@ -155,7 +155,7 @@ jobs:
 
       - uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
         with:
-          name: cryptography-sdist
+          name: cryptography-sdist-ppc64le
       - run: mkdir tmpwheelhouse
       - name: Build the wheel
         run: |
