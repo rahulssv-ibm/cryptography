@@ -29,8 +29,7 @@ RUN apt-get update -y -q && \
 #    sh ./sh.rustup.rs -y && export PATH=$PATH:$HOME/.cargo/bin && . "$HOME/.cargo/env"
 #RUN rm -rf sh.rustup.rs
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \
-    source $HOME/.cargo/env \
-    echo 'export PATH=$PATH:$HOME/.cargo/bin' >> ~/.bashrc
+    echo 'source $HOME/.cargo/env' >> ~/.bashrc
 
 # Ensure Cargo is in the PATH for all shell sessions
 ENV PATH="/root/.cargo/bin:${PATH}"
