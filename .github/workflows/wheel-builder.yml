@@ -75,6 +75,7 @@ jobs:
             -v ${{ github.workspace }}:/cryptography \
             cryptography-ppc64le \
             bash -c "
+              git config --global --add safe.directory /cryptography &&
               python -m venv .venv &&
               .venv/bin/pip install -U pip build maturin &&
               .venv/bin/python -m build --sdist
