@@ -151,6 +151,8 @@ jobs:
       image: ppc64le/python:3.12-slim-bullseye
     name: ppc64le-wheel
     steps:
+      - name: Clean workspace
+        run: rm -rf openssl
       - name: Install dependencies
         run: |
           apt-get update -y -q
