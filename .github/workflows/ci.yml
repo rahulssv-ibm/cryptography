@@ -145,7 +145,7 @@ jobs:
       - uses: ./.github/actions/upload-coverage
 
   ppc64le:
-    runs-on: ["self-hosted", "ppc64le", "linux", "ubuntu-22.04-ppc64le"]
+    runs-on: ["ubuntu-22.04-ppc64le"]
     strategy:
       fail-fast: false
       matrix:
