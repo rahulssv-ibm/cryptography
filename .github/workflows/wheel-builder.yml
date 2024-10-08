@@ -159,7 +159,8 @@ jobs:
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
           echo 'source $HOME/.cargo/env' >> ~/.bashrc
-          PATH="/root/.cargo/bin:${PATH}"
+          source $HOME/.cargo/env
+          echo PATH="/root/.cargo/bin:${PATH}"
       - name: Install setup tools
         run: |
           pip install --upgrade pip
@@ -177,7 +178,7 @@ jobs:
           make install_sw install_ssldirs
           cd ..
       - name: Build Wheel
-        run: OPENSSL_DIR="/openssl" pip wheel --no-cache-dir --no-binary cryptography cryptography
+        run: OPENSSL_DIR="/openssl" PATH="$HOME/.cargo/bin:$PATH" pip wheel --no-cache-dir --no-binary cryptography cryptography
 
 
   macos:
