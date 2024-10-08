@@ -151,8 +151,17 @@ jobs:
       image: ppc64le/python:3.12-slim-bullseye
     name: ppc64le-wheel
     steps:
-      
-
+      - name: Install dependencies
+        run: |
+          apt-get update -y -q
+          apt-get install -y -q --no-install-recommends
+          curl build-essential libssl-dev libffi-dev python3-dev pkg-config cmake
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+          echo 'source $HOME/.cargo/env' >> ~/.bashrc
+          PATH="/root/.cargo/bin:${PATH}"
+          
 
 
   macos:
