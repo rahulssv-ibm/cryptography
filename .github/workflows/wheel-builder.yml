@@ -174,7 +174,7 @@ jobs:
           cd openssl
           git checkout openssl-3.2.2
           sed -i "s/^SHLIB_VERSION=.*/SHLIB_VERSION=100/" VERSION.dat
-          ./config shared no-ssl2 no-ssl3 -fPIC --prefix="/openssl-3.2.2"
+          ./config shared no-ssl2 no-ssl3 -fPIC --prefix="/openssl"
           make depend
           make -j"$(nproc)"
           make install_sw install_ssldirs
