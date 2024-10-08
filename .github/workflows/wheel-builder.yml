@@ -161,6 +161,11 @@ jobs:
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
           echo 'source $HOME/.cargo/env' >> ~/.bashrc
           PATH="/root/.cargo/bin:${PATH}"
+      - name: Install setup tools
+        run: |
+          pip install --upgrade pip
+          pip install -U setuptools
+          pip install -U wheel pip
           
 
 
