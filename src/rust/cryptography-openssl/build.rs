@@ -6,11 +6,6 @@ use std::env;
 
 #[allow(clippy::unusual_byte_groupings)]
 fn main() {
-    println!("cargo:rustc-check-cfg=cfg(CRYPTOGRAPHY_OPENSSL_300_OR_GREATER)");
-    println!("cargo:rustc-check-cfg=cfg(CRYPTOGRAPHY_OPENSSL_320_OR_GREATER)");
-    println!("cargo:rustc-check-cfg=cfg(CRYPTOGRAPHY_IS_LIBRESSL)");
-    println!("cargo:rustc-check-cfg=cfg(CRYPTOGRAPHY_IS_BORINGSSL)");
-
     if let Ok(version) = env::var("DEP_OPENSSL_VERSION_NUMBER") {
         let version = u64::from_str_radix(&version, 16).unwrap();
 
@@ -28,6 +23,11 @@ fn main() {
 
     if env::var("DEP_OPENSSL_BORINGSSL").is_ok() {
         println!("cargo:rustc-cfg=CRYPTOGRAPHY_IS_BORINGSSL");
-        println!("cargo:rustc-link-lib=stdc++");
+        if env::var_os("CARGO_CFG_UNIX").is_some() {
+            match env::var("CARGO_CFG_TARGET_OS").as_deref() {
+                Ok("macos") => println!("cargo:rustc-link-lib=c++"),
+                _ => println!("cargo:rustc-link-lib=stdc++"),
+            }
+        }
     }
 }

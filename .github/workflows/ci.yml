@@ -40,22 +40,26 @@ jobs:
           - {VERSION: "3.12", NOXSESSION: "tests", OPENSSL: {TYPE: "openssl", VERSION: "3.2.3", CONFIG_FLAGS: "no-legacy", NO_LEGACY: "1"}}
           - {VERSION: "3.12", NOXSESSION: "tests", NOXARGS: "--enable-fips=1", OPENSSL: {TYPE: "openssl", CONFIG_FLAGS: "enable-fips", VERSION: "3.1.7"}}
           - {VERSION: "3.12", NOXSESSION: "tests", NOXARGS: "--enable-fips=1", OPENSSL: {TYPE: "openssl", CONFIG_FLAGS: "enable-fips", VERSION: "3.2.3"}}
+          - {VERSION: "3.12", NOXSESSION: "tests", OPENSSL: {TYPE: "openssl", VERSION: "3.4.0-beta1"}}
           - {VERSION: "3.12", NOXSESSION: "rust,tests", OPENSSL: {TYPE: "libressl", VERSION: "3.8.4"}}
           - {VERSION: "3.12", NOXSESSION: "rust,tests", OPENSSL: {TYPE: "libressl", VERSION: "3.9.2"}}
           - {VERSION: "3.12", NOXSESSION: "tests-randomorder"}
-          # Latest commit on the BoringSSL master branch, as of Sep 04, 2024.
-          - {VERSION: "3.12", NOXSESSION: "rust,tests", OPENSSL: {TYPE: "boringssl", VERSION: "6763c954da6b9c7ff4e4c1a335c3833c55a0ec05"}}
-          # Latest commit on the OpenSSL master branch, as of Sep 04, 2024.
-          - {VERSION: "3.12", NOXSESSION: "tests", OPENSSL: {TYPE: "openssl", VERSION: "bbe4571f570ec28b4709746b6d4d624ca5394cc6"}}
+          # Latest commit on the BoringSSL master branch, as of Oct 08, 2024.
+          - {VERSION: "3.12", NOXSESSION: "rust,tests", OPENSSL: {TYPE: "boringssl", VERSION: "fa0214602cc5502c2d1e12cc4692d1045a993aba"}}
+          # Latest commit on the OpenSSL master branch, as of Oct 08, 2024.
+          - {VERSION: "3.12", NOXSESSION: "tests", OPENSSL: {TYPE: "openssl", VERSION: "0a2a8d970f408af595fd699b2675ba45a26c169b"}}
           # Builds with various Rust versions. Includes MSRV and next
           # potential future MSRV.
+          # - 1.70: crates.io sparse protocol by default
+          # - 1.77: offset_of! in std (for pyo3)
+          # - 1.80: LazyLock in std
           - {VERSION: "3.12", NOXSESSION: "rust,tests", RUST: "1.65.0"}
           - {VERSION: "3.12", NOXSESSION: "rust,tests", RUST: "beta"}
           - {VERSION: "3.12", NOXSESSION: "rust,tests", RUST: "nightly"}
           - {VERSION: "3.12", NOXSESSION: "tests-rust-debug"}
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
         timeout-minutes: 3
         with:
           persist-credentials: false
@@ -93,7 +97,7 @@ jobs:
           CONFIG_FLAGS: ${{ matrix.PYTHON.OPENSSL.CONFIG_FLAGS }}
         if: matrix.PYTHON.OPENSSL
       - name: Load OpenSSL cache
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        uses: actions/cache@2cdf405574d6ef1f33a1d12acccd3ae82f47b3f2 # v4.1.0
         id: ossl-cache
         timeout-minutes: 2
         with:
@@ -257,7 +261,7 @@ jobs:
           sed -i "s:ID=alpine:ID=NotpineForGHA:" /etc/os-release
         if: matrix.IMAGE.IMAGE == 'alpine:aarch64'
 
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
         timeout-minutes: 3
         with:
           persist-credentials: false
@@ -300,15 +304,15 @@ jobs:
           - {OS: 'macos-13', ARCH: 'x86_64'}
           - {OS: 'macos-14', ARCH: 'arm64'}
         PYTHON:
-          - {VERSION: "3.7", NOXSESSION: "tests-nocoverage"}
+          - {VERSION: "3.7", NOXSESSION: "tests"}
           - {VERSION: "3.12", NOXSESSION: "tests"}
         exclude:
           # We only test latest Python on arm64. py37 won't work since there's no universal2 binary
-          - PYTHON: {VERSION: "3.7", NOXSESSION: "tests-nocoverage"}
+          - PYTHON: {VERSION: "3.7", NOXSESSION: "tests"}
             RUNNER: {OS: 'macos-14', ARCH: 'arm64'}
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
         timeout-minutes: 3
         with:
           persist-credentials: false
@@ -372,7 +376,7 @@ jobs:
           - {VERSION: "3.12", NOXSESSION: "tests"}
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
         timeout-minutes: 3
         with:
           persist-credentials: false
@@ -446,7 +450,7 @@ jobs:
     name: "Downstream tests for ${{ matrix.DOWNSTREAM }}"
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
         timeout-minutes: 3
         with:
           persist-credentials: false
@@ -490,7 +494,7 @@ jobs:
     if: ${{ always() }}
     timeout-minutes: 3
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
         timeout-minutes: 3
         with:
           persist-credentials: false
