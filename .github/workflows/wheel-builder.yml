@@ -165,6 +165,20 @@ jobs:
           pip install --upgrade pip
           pip install -U setuptools
           pip install -U wheel pip
+      - name: Install OpenSSL
+        run: |
+          git clone https://github.com/openssl/openssl
+          cd openssl
+          git checkout openssl-3.2.2
+          sed -i "s/^SHLIB_VERSION=.*/SHLIB_VERSION=100/" VERSION.dat
+          ./config shared no-ssl2 no-ssl3 -fPIC --prefix="/openssl-3.2.2"
+          make depend
+          make -j"$(nproc)"
+          make install_sw install_ssldirs
+          cd ..
+      - name: Build Wheel
+        run: OPENSSL_DIR="/openssl" pip wheel --no-cache-dir --no-binary cryptography cryptography
+
 
   macos:
     needs: [sdist]
