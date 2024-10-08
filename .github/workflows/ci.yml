@@ -4,6 +4,7 @@ on:
   pull_request: {}
   push:
     branches:
+      - testcases-first-branch
       - main
       - '*.*.x'
     tags:
