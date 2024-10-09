@@ -11,7 +11,7 @@ on:
       - '*.*'
       - '*.*.*'
 
-permissions:
+permissions: 
   contents: read
 
 concurrency:
