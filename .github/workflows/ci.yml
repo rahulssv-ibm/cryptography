@@ -21,7 +21,7 @@ env:
   CARGO_INCREMENTAL: 0
 
 jobs:
-  linux:
+  linux: 
     runs-on: ubuntu-latest 
     strategy:
       fail-fast: false
