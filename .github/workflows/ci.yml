@@ -1,15 +1,17 @@
 name: CI
-on:
+on: 
+  workflow_dispatch: {}
   pull_request: {}
   push:
     branches:
+      - testcases-first-branch 
       - main
       - '*.*.x'
     tags:
       - '*.*'
       - '*.*.*'
 
-permissions:
+permissions: 
   contents: read
 
 concurrency:
@@ -21,12 +23,12 @@ env:
   CARGO_INCREMENTAL: 0
 
 jobs:
-  linux: 
-    runs-on: ubuntu-latest 
+  linux:
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        PYTHON:
+      matrix: 
+        PYTHON:  
           - {VERSION: "3.12", NOXSESSION: "flake"}
           - {VERSION: "3.12", NOXSESSION: "rust"}
           - {VERSION: "3.12", NOXSESSION: "docs", OPENSSL: {TYPE: "openssl", VERSION: "3.2.3"}}
@@ -143,11 +145,11 @@ jobs:
       - uses: ./.github/actions/upload-coverage
 
   ppc64le:
-    runs-on: ["self-hosted", "ppc64le", "linux"]
+    runs-on: ["ubuntu-22.04-ppc64le"]
     strategy:
       fail-fast: false
       matrix:
-        PYTHON:
+        PYTHON: 
           - {VERSION: "3.12", NOXSESSION: "flake"}
           - {VERSION: "3.12", NOXSESSION: "rust"}
           - {VERSION: "3.12", NOXSESSION: "docs", OPENSSL: {TYPE: "openssl", VERSION: "3.2.3"}}
@@ -185,23 +187,18 @@ jobs:
       - name: Create and start Docker container
         run: |
           docker run --name $CONTAINER_NAME -d $IMAGE_NAME tail -f /dev/null
-
       - name: Run build and tests inside Docker container
         run: |
-
           NOXARGS_OPTION=""
           RUST_OPTION=""
-
           # Set NOXARGS_OPTION only if NOXARGS is provided
           if [ -n "${{ matrix.PYTHON.NOXARGS }}" ]; then
             NOXARGS_OPTION="--noxargs '${{ matrix.PYTHON.NOXARGS }}'"
           fi
-
           # Set RUST_OPTION only if RUST is provided
           if [ -n "${{ matrix.PYTHON.RUST }}" ]; then
             RUST_OPTION="--rust '${{ matrix.PYTHON.RUST }}'"
           fi
-
           docker exec \
           -e CONFIG_FLAGS_ARG=${{ matrix.PYTHON.OPENSSL.CONFIG_FLAGS }} \
           -e CRYPTOGRAPHY_OPENSSL_NO_LEGACY="${{ matrix.PYTHON.OPENSSL.NO_LEGACY }}" \
@@ -212,7 +209,6 @@ jobs:
           --openssl-version ${{ matrix.PYTHON.OPENSSL.VERSION }} \
           $NOXARGS_OPTION \
           $RUST_OPTION"
-
       - name: Clean up Docker image and container
         if: always()  # Ensures cleanup runs even if previous steps fail
         run: |
@@ -295,7 +291,7 @@ jobs:
     runs-on: ${{ matrix.RUNNER.OS }}
     strategy:
       fail-fast: false
-      matrix:
+      matrix: 
         RUNNER:
           - {OS: 'macos-13', ARCH: 'x86_64'}
           - {OS: 'macos-14', ARCH: 'arm64'}
@@ -474,7 +470,6 @@ jobs:
           import importlib.metadata
           import shutil
           import urllib.request
-
           d = importlib.metadata.distribution("cryptography")
           with urllib.request.urlopen("https://pypi.org/pypi/cryptography/json") as r:
               latest_version = json.load(r)["info"]["version"]
